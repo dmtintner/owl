@@ -4,11 +4,10 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 import hashlib
 from datetime import datetime
-from secret_dispenser.serialisers import  UserUIDSerializer, UserSerialser
+from secret_dispenser.serialisers import  UserUIDSerializer, UserSerialser,ConversationSerializer
 
 
 @api_view(['POST'])
-
 def create_auth(request):
     '''
     Serialises data from a request which contoains a UID.
@@ -29,8 +28,14 @@ def create_auth(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer._errors, status=status.HTTP_400_BAD_REQUEST)
-
+@api_view(['POST'])
 def InitateConversation(request):
-    pass
+    serialized = ConversationSerializer(data=request.DATA)
+    if serialized.is_valid():
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
 def RespondToConversation(request):
     pass
