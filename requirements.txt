@@ -10,3 +10,6 @@ wsgiref==0.1.2
 djangorestframework
 markdown
 django-filter
+gunicorn==17.5
+gevent==0.13.8
+MySQL-python
