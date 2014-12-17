@@ -10,7 +10,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(PROJECT_PATH)
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,6 +37,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_extensions',
+    'secret_dispenser',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,3 +86,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+TEMPLATE_DIRS = (
+    PROJECT_PATH + '/templates/',
+)
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+TEMPLATE_LOADERS = (
+'django.template.loaders.filesystem.Loader',
+'django.template.loaders.app_directories.Loader',
+#django.template.loaders.eggs.Loader',
+)
