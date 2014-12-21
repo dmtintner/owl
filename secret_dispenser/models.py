@@ -18,11 +18,14 @@ class Secret(TimeStampModel):
     AuthoringUser = models.Field(models.ForeignKey(User),null=False,db_index=True)
     Content = models.Field(models.TextField())
     NumberOfReplys = models.Field(models.IntegerField,default=1,null=False,db_index=True)
+    ReplysTo = models.ForeignKey('self')
+    Conversation = models.ForeignKey(Conversation)
     @staticmethod
-    def CreateSecret(AutheringUser,Content):
+    def CreateSecret(AutheringUser,Content,ReplyTo=None):
         S =Secret()
         S.AuthoringUser = AutheringUser
         S.Content =Content
+        S.ReplysTo=ReplyTo
         S.save()
         return S
 
@@ -30,22 +33,14 @@ class Conversation(models.Model):
     Initiator =models.Field(models.ForeignKey(User),null=False,db_index=True)
     Replyer = models.Field(models.ForeignKey(User),null=True,db_index=True)
     InitialMessage = models.ForeignKey(Secret,db_index=True,null=False)
+    LatestMessage = models.ForeignKey(Secret,db_index=True,null=False)
 
     @staticmethod
     def InitateConversation(Initiator,InitalText):
         C = Conversation()
         C.Initiator=Initiator
-        C.S =Secret.CreateSecret(Initiator,InitalText)
+        C.InitialMessage =Secret.CreateSecret(Initiator,InitalText)
+        C.LatestMessage=C.InitialMessage
         C.save()
         return C
-
-
-class SecretReader(models.Model):
-    DateRead = models.Field(models.DateTimeField,default=datetime.now(),blank=False,db_index=True)
-    Secret = models.ForeignKey(Secret,db_index=True,null=False)
-    Reader = models.ForeignKey(User,null=False)
-
-class SecretReply(TimeStampModel):
-    Secret = models.ForeignKey(Secret,db_index=True,null=False)
-    Replyer =models.ForeignKey(SecretReader)
 
